@@ -14,7 +14,7 @@ def index():
 
 @app.route('/predict', methods=['POST'])
 def upload():
-    imagefile = request.files['file']
+    imagefile = request.form['file']
     print(imagefile)
     image_path = "./images/" + imagefile.filename
     imagefile.save(image_path)
@@ -33,4 +33,3 @@ def upload():
 
 if __name__ == '__main__':
     app.run(port=8000,debug=True)
-
