@@ -1,6 +1,8 @@
-from flask import Flask, request, jsonify
+import json
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 import numpy as np
+import requests
 from useful_functions import model_predict_cnn, model_cnn
 
 app = Flask(__name__)
@@ -14,6 +16,13 @@ def index():
 
 @app.route('/predict', methods=['POST'])
 def upload():
+    print(request.json)
+    imagefile = request.json
+    req = requests.post('http://localhost:4000/images/sendFile', json=imagefile)
+    print(req.json)
+    dictFromServer = req.json()
+    print(dictFromServer)
+
     imagefile = request.form['file']
     print(imagefile)
     image_path = "./images/" + imagefile.filename
