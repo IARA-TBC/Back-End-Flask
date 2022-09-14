@@ -19,7 +19,8 @@ def upload():
     print(request.json)
     imagefile = request.json
     req = requests.post('http://localhost:4000/images/sendFile', json=imagefile)
-    print(req.json)
+    print(req)
+    print(req.content)
     dictFromServer = req.json()
     print(dictFromServer)
 
