@@ -3,7 +3,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 import numpy as np
 import requests
-from useful_functions import model_predict_cnn, model_cnn
+from useful_functions import model_predict_cnn, model_predict_transformers
 from PIL import Image
 import io
 
@@ -27,24 +27,20 @@ def upload():
     base64_data = req.content
 
     image = Image.open(io.BytesIO(base64_data))
-    print(image)
 
-    '''imagefile = request.files['file']
-    print(imagefile)
-    image_path = "./images/" + imagefile.filename
-    imagefile.save(image_path)
-    '''
+    preds = model_predict_cnn(image)
+    #predsTransformers = model_predict_transformers(image)
 
-    preds = model_predict_cnn(image, model_cnn)
+    #print(predsTransformers)
 
     accuracy = float(np.max(preds, axis=1)[0])
+    print(accuracy)
     accuracy = str(round(accuracy * 100 , 2))
     accuracy = accuracy + ' %'
 
-    response = {'prediction: ' : accuracy}
-
-
-    return jsonify(response)
+    return jsonify({
+        'prediction': accuracy
+    })
 
 
 if __name__ == '__main__':
