@@ -1,9 +1,8 @@
-import json
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import numpy as np
 import requests
-from useful_functions import model_predict_cnn, model_predict_transformers
+from useful_functions import model_predict_cnn
 from PIL import Image
 import io
 

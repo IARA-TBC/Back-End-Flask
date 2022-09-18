@@ -1,21 +1,18 @@
 import numpy as np
-import io
 import keras.models
-import tensorflow as tf
 from skimage import transform
-from PIL import Image
 from keras.models import load_model
-from transformers import TFViTForImageClassification
 import transformers
 
 MODEL_PATH_CNN = './models/TBC_CNN_Fusion.h5'
 
 model_cnn = load_model(MODEL_PATH_CNN)
 
-with open("./models/config/ConfigTrain.json") as json_file:
+'''with open("./models/config/ConfigTrain.json") as json_file:
     json_config = json_file.read()
 transformer = keras.models.model_from_json(json_config)
 transformer.load_weights('./models/WeigthsTrain.h5')
+'''
 
 def image_cnn(image):
     np_image = np.array(image).astype('float32') / 255
