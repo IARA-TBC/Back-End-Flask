@@ -2,17 +2,17 @@ import numpy as np
 import keras.models
 from skimage import transform
 from keras.models import load_model
-import transformers
+from transformers import TFViTForImageClassification
 
 MODEL_PATH_CNN = './models/TBC_CNN_Fusion.h5'
 
 model_cnn = load_model(MODEL_PATH_CNN)
 
-'''with open("./models/config/ConfigTrain.json") as json_file:
+with open("./models/config/ConfigTrain.json") as json_file:
     json_config = json_file.read()
 transformer = keras.models.model_from_json(json_config)
 transformer.load_weights('./models/WeigthsTrain.h5')
-'''
+
 
 def image_cnn(image):
     np_image = np.array(image).astype('float32') / 255
@@ -34,5 +34,5 @@ def model_predict_cnn(image):
 
 def model_predict_transformers(image):
     #Arreglar el predict
-    preds = transformers.predict(image_transformers(image))
+    preds = transformer.predict(image_transformers(image))
     return preds
