@@ -1,3 +1,4 @@
+from ast import arg
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import numpy as np
@@ -5,6 +6,7 @@ import requests
 from useful_functions import model_predict_cnn, model_predict_transformers
 from PIL import Image
 import io
+from threading import Thread, current_thread
 
 app = Flask(__name__)
 CORS(app)
@@ -25,9 +27,19 @@ def upload():
 
     image = Image.open(io.BytesIO(base64_data))
 
+
+
+    Cnn_Thread = Thread(target=model_predict_cnn, args=image)
+    Cnn_Thread.start()
+    print(current_thread().name)
+
+    Thread_Transformers = Thread(target=model_predict_transformers, args=image)
+    Thread_Transformers.start()
+    print(current_thread().name) 
+
     preds_cnn = model_predict_cnn(image)
+
     preds_transformers = model_predict_transformers(image)
-    print('Transformers:', preds_transformers)
 
     accuracy_cnn_raw = float(np.max(preds_cnn, axis=1)[0])
     accuracy_cnn = str(round(accuracy_cnn_raw * 100 , 2))

@@ -1,3 +1,6 @@
+from ast import arg
+from email.mime import image
+import threading
 import numpy as np
 import keras.models
 from skimage import transform
@@ -28,11 +31,16 @@ def image_transformers(image):
     img = np.expand_dims(img, axis=0)
     return img
 
+
+
 def model_predict_cnn(image):
-    preds = model_cnn.predict(image_cnn(image))
-    return preds
+    preds_cnn = model_cnn.predict(image_cnn(image))
+    print(preds_cnn)
+    return preds_cnn
+
 
 def model_predict_transformers(image):
-    #Arreglar el predict
-    preds = transformer.predict(image_transformers(image))
-    return preds
+    preds_transformers = transformer.predict(image_transformers(image))
+    print(preds_transformers)
+    return preds_transformers
+
