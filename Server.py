@@ -31,10 +31,10 @@ def upload():
 
     Cnn_Thread.start()
     print("ESTE ES EL PRIMERO:", current_thread().name)
-    Cnn_Thread.join()
-
     Thread_Transformers.start()
     print("ESTE ES EL SEGUNDO:", current_thread().name) 
+
+    Cnn_Thread.join()
     Thread_Transformers.join()
 
     preds_cnn = model_predict_cnn(image)
