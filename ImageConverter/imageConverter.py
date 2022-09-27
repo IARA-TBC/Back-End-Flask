@@ -1,9 +1,11 @@
+from email.mime import image
 import cv2 as cv
 import numpy as np
 import pydicom as PDCM
+import os
+from PIL import Image
 
-def Dicom_to_Image(Path):
-    DCM_Img = PDCM.read_file(Path)
+def Dicom_to_Image(DCM_Img):
 
     rows = DCM_Img.get(0x00280010).value #Get number of rows from tag (0028, 0010)
     cols = DCM_Img.get(0x00280011).value #Get number of cols from tag (0028, 0011)
@@ -41,9 +43,15 @@ def Dicom_to_Image(Path):
             else:
                 New_Img[i][j] = int(((Rescale_Pix_Val - Window_Min) / (Window_Max - Window_Min)) * 255) #Normalize the intensities
 
-    return New_Img, Instance_Number
+    path = os.getcwd() + '/images'
+    New_Img_name = str(Instance_Number - 1).zfill(4) + '.jpg'
+    path = path + '/' + New_Img_name
+    print(path)
+    cv.imwrite(path, New_Img)
+    return path
 
-def main():
+'''
+def img_converter():
     Input_Image = 'DCM Data/2.dcm'
 
     Output_Image, Instance_Number = Dicom_to_Image(Input_Image)
@@ -51,4 +59,5 @@ def main():
     cv.imwrite(str(Instance_Number - 1).zfill(4) + '.jpg', Output_Image)
 
 if __name__ == "__main__":
-    main()
+    img_converter()
+'''

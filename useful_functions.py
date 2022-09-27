@@ -1,11 +1,12 @@
 from ast import arg
 from email.mime import image
-import threading
 import numpy as np
 import keras.models
 from skimage import transform
 from keras.models import load_model
 from transformers import TFViTForImageClassification
+from time import sleep, time
+from threading import Thread
 
 MODEL_PATH_CNN = './models/TBC_CNN_Fusion.h5'
 
@@ -38,9 +39,10 @@ def model_predict_cnn(image):
     print(preds_cnn)
     return preds_cnn
 
-
 def model_predict_transformers(image):
     preds_transformers = transformer.predict(image_transformers(image))
-    print(preds_transformers)
     return preds_transformers
 
+# SuperFastPython.com
+# example of returning a value from a thread
+ 
