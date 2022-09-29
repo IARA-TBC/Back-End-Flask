@@ -1,28 +1,24 @@
-# SuperFastPython.com
-# example of returning multiple value from a thread
+from useful_functions import model_cnn, image_cnn, model_predict_cnn
 from time import sleep
 from threading import Thread
-
-
+from PIL import Image
+ 
 # custom thread
-'''class CustomThread(Thread):
+'''
+class CustomThread(Thread):
     # constructor
-    def __init__(self, image):
+    def __init__(self):
         # execute the base constructor
         Thread.__init__(self)
-        # set a default values
-        self.image = None
-        self.value2 = None
-        self.value3 = None
+        # set a default value
+        self.value = None
  
     # function executed in a new thread
-    def run(self, image):
+    def run(self):
         # block for a moment
         sleep(1)
         # store data in an instance variable
-        self.image = 'Hello from a new thread'
-        self.value2 = 99
-        self.value3 = False
+        self.value = 'Hello from a new thread'
  
 # create a new thread
 thread = CustomThread()
@@ -30,54 +26,148 @@ thread = CustomThread()
 thread.start()
 # wait for the thread to finish
 thread.join()
-# report all values returned from a thread
-print(thread.value1)
-print(thread.value2)
-print(thread.value3)
-
-# SuperFastPython.com
-# example of returning a value from a thread
-'''
-'''
-from time import sleep
-from threading import Thread
- 
-# function executed in a new thread
-def task():
-    # block for a moment
-    sleep(1)
-    # correctly scope the global variable
-    global data
-    # store data in the global variable
-    data = 'Hello from a new thread'
- 
-# define the global variable
-data = None
-# create a new thread
-thread = Thread(target=task)
-# start the thread
-thread.start()
-# wait for the thread to finish
-thread.join()
-# report the global variable
+# get the value returned from the thread
+data = thread.value
 print(data)
 '''
 
 # custom thread
-class CustomThread:
+'''
+class CustomThreadCnn():
     # constructor
+    def __init__(self, image):
 
-    def prueba(self, nombre):
-        sleep(2)
-        print("Hola bro", nombre)
-
-
-    def __init__(self, nombre):
-        # execute the base constructor
-        t = Thread(target=self.prueba, args=nombre)
         # set a default value
+        self.image = image
+        self.preds_cnn = None
+
+        t = Thread(target=self.model_predict_cnn)
         t.start()
- 
+        t.join()
+        
+    
+    # function executed in a new thread
+    def model_predict_cnn(self):
+        self.preds_cnn = model_cnn.predict(image_cnn(self.image))
+        #self.preds_cnn = preds_cnn
+        #print(preds_cnn)
+        #return  preds_cnn
 
-CustomThread("Luis")
+# custom thread
+class CustomThreadCnn2():
+    # constructor
+    def __init__(self, image):
 
+        # set a default value
+        self.image = image
+        self.preds_cnn = None
+
+        t = Thread(target=self.model_predict_cnn)
+        t.start()
+        
+    
+    # function executed in a new thread
+    def model_predict_cnn(self):
+        self.preds_cnn = model_cnn.predict(image_cnn(self.image))
+        #self.preds_cnn = preds_cnn
+        #print(preds_cnn)
+        #return  preds_cnn
+
+
+
+thread = CustomThreadCnn2(image)
+
+thread.join()
+
+data = thread.image
+data2 = thread.preds_cnn
+print(data)
+print(data2) 
+  
+# start the thread
+thread.start()
+# wait for the thread to finish
+thread.join()
+
+'''
+image = Image.open('0000.jpg')
+# custom thread
+class CustomThreadCnn3(Thread):
+    # constructor
+    def __init__(self, image):
+
+        # execute the base constructor
+        Thread.__init__(self)
+        # set a default value
+        self.image = image
+        self.preds_cnn = None
+    
+    
+    # function executed in a new thread
+    def model_predict_cnn(self):
+        self.preds_cnn = model_cnn.predict(image_cnn(self.image))
+        #self.preds_cnn = preds_cnn
+        #print(preds_cnn)
+        #return  preds_cnn
+
+
+
+# create a new thread
+thread = CustomThreadCnn3(image)
+
+thread.start()
+# wait for the thread to finish
+thread.join()
+# get the value returned from the thread
+print(thread.image)
+print(thread.preds_cnn)
+
+
+
+
+'''class Employee:
+
+    def __init__(self, first, last, pay):
+        self.first = first
+        self.last = last
+        self.email = first + '.' + last + '@email.com'
+        self.pay = pay
+
+    def fullname(self):
+        return '{} {}'.format(self.first, self.last)
+
+emp_1 = Employee('Corey', 'Schafer', 50000)
+emp_2 = Employee('Test', 'Employee', 60000)
+
+
+# SuperFastPython.com
+# example of returning a value from a thread
+from time import sleep
+from threading import Thread
+
+# custom thread
+class CustomThread(Thread):
+    # constructor
+    def __init__(self):
+        # execute the base constructor
+        Thread.__init__(self)
+        # set a default value
+        self.value = None
+
+    # function executed in a new thread
+    def run(self):
+        # block for a moment
+        sleep(1)
+        # store data in an instance variable
+        self.value = 'Hello from a new thread'
+
+# create a new thread
+thread = CustomThread()
+# start the thread
+thread.start()
+# wait for the thread to finish
+thread.join()
+# get the value returned from the thread
+data = thread.value
+print(data)
+'''
