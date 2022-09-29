@@ -2,15 +2,14 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 import numpy as np
 import requests
-from useful_functions import model_predict_transformers
-from Threads import CustomThreadCnn
+from useful_functions import model_predict_transformers, model_predict_cnn
+from Threads import CustomThreadCnn, CustomThreadTransformers
 from PIL import Image
 import pydicom as PDCM
 import io
 from threading import Thread, current_thread
 from ImageConverter.imageConverter import Dicom_to_Image
-from time import sleep
-
+    
 app = Flask(__name__)
 CORS(app)
 
@@ -68,11 +67,21 @@ def predict_jpg_img():
 
     preds_transformers = model_predict_transformers(image)
     '''    
-    thread = CustomThreadCnn(image)
-    preds_cnn = thread.preds_cnn
-    print(preds_cnn)
+    thread_cnn = CustomThreadCnn(image)
+    thread_cnn.start()
 
-    preds_transformers = model_predict_transformers(image)
+
+    thread_transformers = CustomThreadTransformers(image)
+    thread_transformers.start()
+
+
+    thread_cnn.join()
+    thread_transformers.join()
+
+    preds_cnn = thread_cnn.preds_cnn
+    print(preds_cnn)
+    preds_transformers = thread_transformers(image)
+    print(preds_transformers)
 
     accuracy_cnn_raw = float(np.max(preds_cnn, axis=1)[0])
     accuracy_cnn = str(round(accuracy_cnn_raw * 100 , 2))

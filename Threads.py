@@ -1,7 +1,8 @@
-from useful_functions import model_cnn, image_cnn, model_predict_cnn
+from useful_functions import model_cnn, image_cnn, image_transformers
 from time import sleep
-from threading import Thread
+from threading import Thread, current_thread
 from PIL import Image
+import keras.models
  
 # custom thread
 '''
@@ -31,7 +32,6 @@ data = thread.value
 print(data)
 '''
 
-# custom thread
 '''
 class CustomThreadCnn():
     # constructor
@@ -52,6 +52,7 @@ class CustomThreadCnn():
         #self.preds_cnn = preds_cnn
         #print(preds_cnn)
         #return  preds_cnn
+
 
 # custom thread
 class CustomThreadCnn2():
@@ -92,7 +93,7 @@ thread.join()
 '''
 image = Image.open('0000.jpg')
 # custom thread
-class CustomThreadCnn3(Thread):
+class CustomThreadCnn(Thread):
     # constructor
     def __init__(self, image):
 
@@ -100,27 +101,57 @@ class CustomThreadCnn3(Thread):
         Thread.__init__(self)
         # set a default value
         self.image = image
-        self.preds_cnn = None
+        self.preds_cnn = model_cnn.predict(image_cnn(self.image))
     
     
     # function executed in a new thread
     def model_predict_cnn(self):
-        self.preds_cnn = model_cnn.predict(image_cnn(self.image))
+        print("Este es el primer thread para cnn",  current_thread().name)
+        return self.preds_cnn
         #self.preds_cnn = preds_cnn
         #print(preds_cnn)
         #return  preds_cnn
 
 
+with open("./models/config/ConfigTrain.json") as json_file:
+    json_config = json_file.read()
+transformer = keras.models.model_from_json(json_config)
+transformer.load_weights('./models/WeigthsTrain.h5')
 
-# create a new thread
-thread = CustomThreadCnn3(image)
+class CustomThreadTransformers(Thread):
+    # constructor
+    def __init__(self, image):
 
-thread.start()
-# wait for the thread to finish
-thread.join()
-# get the value returned from the thread
-print(thread.image)
-print(thread.preds_cnn)
+        # execute the base constructor
+        Thread.__init__(self)
+        # set a default value
+        self.image = image
+        self.preds_transformers = transformer.predict(image_transformers(self.image))
+    
+    
+    # function executed in a new thread
+    def model_predict_transformers(self):
+        print("Este es el segunda thread para thread",  current_thread().name)
+        return self.preds_transformers
+        #self.preds_cnn = preds_cnn
+        #print(preds_cnn)
+        #return  preds_cnn
+
+thread_cnn = CustomThreadCnn(image)
+thread_cnn.start()
+
+
+thread_transformers = CustomThreadTransformers(image)
+thread_transformers.start()
+
+
+thread_cnn.join()
+thread_transformers.join()
+
+preds_cnn = thread_cnn.preds_cnn
+print(preds_cnn)
+preds_transformers = thread_transformers(image)
+print(preds_transformers)
 
 
 
