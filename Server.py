@@ -80,8 +80,10 @@ def predict_jpg_img():
 
     preds_cnn = thread_cnn.preds_cnn
     print(preds_cnn)
-    preds_transformers = thread_transformers(image)
+    print(thread_cnn.name)
+    preds_transformers = thread_transformers.preds_transformers
     print(preds_transformers)
+    print(thread_transformers.name)
 
     accuracy_cnn_raw = float(np.max(preds_cnn, axis=1)[0])
     accuracy_cnn = str(round(accuracy_cnn_raw * 100 , 2))

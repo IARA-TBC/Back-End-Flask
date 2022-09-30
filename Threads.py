@@ -106,7 +106,6 @@ class CustomThreadCnn(Thread):
     
     # function executed in a new thread
     def model_predict_cnn(self):
-        print("Este es el primer thread para cnn",  current_thread().name)
         return self.preds_cnn
         #self.preds_cnn = preds_cnn
         #print(preds_cnn)
@@ -131,7 +130,6 @@ class CustomThreadTransformers(Thread):
     
     # function executed in a new thread
     def model_predict_transformers(self):
-        print("Este es el segunda thread para thread",  current_thread().name)
         return self.preds_transformers
         #self.preds_cnn = preds_cnn
         #print(preds_cnn)
@@ -150,8 +148,10 @@ thread_transformers.join()
 
 preds_cnn = thread_cnn.preds_cnn
 print(preds_cnn)
-preds_transformers = thread_transformers(image)
+print(thread_cnn.name)
+preds_transformers = thread_transformers.preds_transformers
 print(preds_transformers)
+print(thread_transformers.name)
 
 
 
