@@ -1,6 +1,5 @@
 from useful_functions import model_cnn, image_cnn, image_transformers
-from time import sleep
-from threading import Thread, current_thread
+from threading import Thread
 from PIL import Image
 import keras.models
  
@@ -135,23 +134,6 @@ class CustomThreadTransformers(Thread):
         #print(preds_cnn)
         #return  preds_cnn
 
-thread_cnn = CustomThreadCnn(image)
-thread_cnn.start()
-
-
-thread_transformers = CustomThreadTransformers(image)
-thread_transformers.start()
-
-
-thread_cnn.join()
-thread_transformers.join()
-
-preds_cnn = thread_cnn.preds_cnn
-print(preds_cnn)
-print(thread_cnn.name)
-preds_transformers = thread_transformers.preds_transformers
-print(preds_transformers)
-print(thread_transformers.name)
 
 
 
