@@ -7,7 +7,6 @@ from Threads import CustomThreadCnn, CustomThreadTransformers
 from PIL import Image
 import pydicom as PDCM
 import io
-from threading import Thread, current_thread
 from ImageConverter.imageConverter import Dicom_to_Image
     
 app = Flask(__name__)
@@ -16,12 +15,11 @@ CORS(app)
 #Just a test route
 @app.route('/', methods=['GET'])
 def index():
-    # Main page
     return jsonify("Hola")
 
 
 
-#Main route
+#Predict_jpg_route
 @app.route('/predict_jpg', methods=['POST'])
 def predict_jpg_img():
     print(request.json)
@@ -35,48 +33,28 @@ def predict_jpg_img():
     #Recibo la imagen en base64
     base64_data = req.content
 
-    #Abro convierto la información a bytes y la abro con pillow
+    #Convierto la información a bytes y la abro con pillow
     image = Image.open(io.BytesIO(base64_data))
 
-    #Le indico a un thread que targetee a la función que permite al modelo de cnn predecir el resultado de la imagen
+    #Llamo la clase que me permite ejecutar la función del modelo de cnn que me permite predecir si la imagen tiene tuberculosis o no
     #Además le paso como paraámetro la imagen
-    
-    '''Cnn_Thread = Thread(target=model_predict_cnn, args=(image,))
-
-    Cnn_Thread.start()
-    print("ESTE ES EL PRIMERO:", current_thread().name)
-
-    #Le indico a un thread que targetee a la función que permite al modelo de transformers predecir el resultado de la imagen
-    #Además le paso como paraámetro la imagen    
-    Thread_Transformers = Thread(target=model_predict_transformers, args=(image,))
-
-    #Abro el thread de cnn
-
-    #Abro el thread de transformers
-    Thread_Transformers.start()
-    print("ESTE ES EL SEGUNDO:", current_thread().name) 
-
-    #Cierro el thread de cnn
-    Cnn_Thread.join()
-    #Cierro el thread de transformers
-    Thread_Transformers.join()
-
-
-
-    preds_cnn = model_predict_cnn(image)
-
-    preds_transformers = model_predict_transformers(image)
-    '''    
     thread_cnn = CustomThreadCnn(image)
+
+    #Ejercuto el thread de cnn
     thread_cnn.start()
 
-
+    #Hago lo mismo que con la clase de cnn pero ahora con la de transformers
     thread_transformers = CustomThreadTransformers(image)
+
+    #Ejercuto el thread de trasnformers
     thread_transformers.start()
 
-
+    #Cierro el Thread de cnn
     thread_cnn.join()
+
+    #Cierro el Thread de trasnformers.
     thread_transformers.join()
+    
 
     preds_cnn = thread_cnn.preds_cnn
     print(preds_cnn)
@@ -117,27 +95,28 @@ def predict_dicom_img():
     dicom_image_path = Dicom_to_Image(dicom_encoding)
     image = Image.open(dicom_image_path, mode='r')
 
-    #image_to_send = open(dicom_encoding)
-
     files = {'file': open(dicom_image_path, 'rb')}
     image_req = requests.post('http://localhost:4000/images/saveImageRoute', files=files)
     print(image_req.json()['path'])
     new_path = image_req.json()['path']
 
-    Cnn_Thread = Thread(target=model_predict_cnn, args=(image,))    
-    Thread_Transformers = Thread(target=model_predict_transformers, args=(image,))
+    thread_cnn = CustomThreadCnn(image)
+    thread_cnn.start()
 
-    Cnn_Thread.start()
-    print("ESTE ES EL PRIMERO:", current_thread().name)
-    Thread_Transformers.start()
-    print("ESTE ES EL SEGUNDO:", current_thread().name) 
 
-    Cnn_Thread.join()
-    Thread_Transformers.join()
+    thread_transformers = CustomThreadTransformers(image)
+    thread_transformers.start()
 
-    preds_cnn = model_predict_cnn(image)
 
-    preds_transformers = model_predict_transformers(image)
+    thread_cnn.join()
+    thread_transformers.join()
+
+    preds_cnn = thread_cnn.preds_cnn
+    print(preds_cnn)
+    print(thread_cnn.name)
+    preds_transformers = thread_transformers.preds_transformers
+    print(preds_transformers)
+    print(thread_transformers.name)
 
     accuracy_cnn_raw = float(np.max(preds_cnn, axis=1)[0])
     accuracy_cnn = str(round(accuracy_cnn_raw * 100 , 2))

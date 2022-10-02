@@ -3,7 +3,6 @@ import keras.models
 from skimage import transform
 from keras.models import load_model
 from transformers import TFViTForImageClassification
-from threading import Thread
 
 MODEL_PATH_CNN = './models/TBC_CNN_Fusion.h5'
 
