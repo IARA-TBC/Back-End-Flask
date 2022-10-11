@@ -49,15 +49,3 @@ def Dicom_to_Image(DCM_Img):
     print(path)
     cv.imwrite(path, New_Img)
     return path
-
-'''
-def img_converter():
-    Input_Image = 'DCM Data/2.dcm'
-
-    Output_Image, Instance_Number = Dicom_to_Image(Input_Image)
-
-    cv.imwrite(str(Instance_Number - 1).zfill(4) + '.jpg', Output_Image)
-
-if __name__ == "__main__":
-    img_converter()
-'''

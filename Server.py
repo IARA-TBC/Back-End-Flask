@@ -2,7 +2,6 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 import numpy as np
 import requests
-from useful_functions import model_predict_transformers, model_predict_cnn
 from Threads import CustomThreadCnn, CustomThreadTransformers
 from PIL import Image
 import pydicom as PDCM
@@ -40,11 +39,11 @@ def predict_jpg_img():
     #Además le paso como paraámetro la imagen
     thread_cnn = CustomThreadCnn(image)
 
-    #Ejercuto el thread de cnn
-    thread_cnn.start()
-
     #Hago lo mismo que con la clase de cnn pero ahora con la de transformers
     thread_transformers = CustomThreadTransformers(image)
+
+    #Ejercuto el thread de cnn
+    thread_cnn.start()
 
     #Ejercuto el thread de trasnformers
     thread_transformers.start()
@@ -56,10 +55,10 @@ def predict_jpg_img():
     thread_transformers.join()
     
 
-    preds_cnn = thread_cnn.preds_cnn
+    preds_cnn = thread_cnn.value
     print(preds_cnn)
     print(thread_cnn.name)
-    preds_transformers = thread_transformers.preds_transformers
+    preds_transformers = thread_transformers.value
     print(preds_transformers)
     print(thread_transformers.name)
 
@@ -95,26 +94,26 @@ def predict_dicom_img():
     dicom_image_path = Dicom_to_Image(dicom_encoding)
     image = Image.open(dicom_image_path, mode='r')
 
+    print(image)
+
     files = {'file': open(dicom_image_path, 'rb')}
     image_req = requests.post('http://localhost:4000/images/saveImageRoute', files=files)
     print(image_req.json()['path'])
     new_path = image_req.json()['path']
 
     thread_cnn = CustomThreadCnn(image)
-    thread_cnn.start()
-
-
     thread_transformers = CustomThreadTransformers(image)
-    thread_transformers.start()
 
+    thread_cnn.start()
+    thread_transformers.start()
 
     thread_cnn.join()
     thread_transformers.join()
 
-    preds_cnn = thread_cnn.preds_cnn
+    preds_cnn = thread_cnn.value
+    preds_transformers = thread_transformers.value
     print(preds_cnn)
     print(thread_cnn.name)
-    preds_transformers = thread_transformers.preds_transformers
     print(preds_transformers)
     print(thread_transformers.name)
 
