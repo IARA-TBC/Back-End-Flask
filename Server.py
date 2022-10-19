@@ -76,9 +76,9 @@ def predict_jpg_img():
 
 
     return jsonify({
-        'prediction_cnn': accuracy_cnn,
-        'prediction_transformers': accuracy_transformers,
-        'prediction_average': accuracy_average,
+        'prediccion_cnn': accuracy_cnn,
+        'prediccion_transformers': accuracy_transformers,
+        'prediccion_promedio': accuracy_average,
     })
 
 
@@ -131,9 +131,9 @@ def predict_dicom_img():
 
 
     return jsonify({
-        'prediction_cnn': accuracy_cnn,
-        'prediction_transformers': accuracy_transformers,
-        'prediction_average': accuracy_average,
+        'prediccion_cnn': accuracy_cnn,
+        'prediccion_transformers': accuracy_transformers,
+        'prediccion_promedio': accuracy_average,
         'new_path': new_path
     })
 
