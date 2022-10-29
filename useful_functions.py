@@ -3,6 +3,7 @@ import keras.models
 from skimage import transform
 from keras.models import load_model
 from transformers import TFViTForImageClassification
+import torch
 
 MODEL_PATH_CNN = './models/TBC_CNN_Fusion.h5'
 
@@ -27,7 +28,6 @@ def image_transformers(image):
     img = np.moveaxis(image, -1, 0)
     img = np.expand_dims(img, axis=0)
     return img
-
 
 
 def model_predict_cnn(image):

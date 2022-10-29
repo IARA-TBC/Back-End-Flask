@@ -53,7 +53,6 @@ def predict_jpg_img():
 
     #Cierro el Thread de trasnformers.
     thread_transformers.join()
-    
 
     preds_cnn = thread_cnn.value
     print(preds_cnn)
@@ -140,3 +139,5 @@ def predict_dicom_img():
 
 if __name__ == '__main__':
     app.run(port=8000,debug=True)
+
+

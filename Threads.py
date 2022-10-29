@@ -5,9 +5,6 @@ from PIL import Image, ImageFile
 from time import sleep
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
-
-image = Image.open('0003.jpg')
-
 # Inicializo una clase
 class CustomThreadCnn(Thread):
     # Creo que un constructor que me permite inicializar las variables que voy a utiliza
