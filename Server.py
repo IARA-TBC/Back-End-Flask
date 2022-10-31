@@ -7,6 +7,9 @@ from PIL import Image
 import pydicom as PDCM
 import io
 from ImageConverter.imageConverter import Dicom_to_Image
+from dani_model import image_TBC_location
+import os
+from os.path import abspath
     
 app = Flask(__name__)
 CORS(app)
@@ -24,6 +27,9 @@ def predict_jpg_img():
     print(request.json)
     #Recibo el json enviado por node que contiene la ruta de la imagen
     imagefile = request.json
+    imagefile2 = request.json['path']
+    image_name = os.path.split(imagefile2)[-1]
+    print(image_name)
 
     #Hago una petición post a una ruta del back-end que recibe una ruta de una imagen y devuelve la misma. 
     #Por supuesto, en este caso estoy enviando la ruta de la imagen antes recibida
@@ -31,6 +37,7 @@ def predict_jpg_img():
 
     #Recibo la imagen en base64
     base64_data = req.content
+
 
     #Convierto la información a bytes y la abro con pillow
     image = Image.open(io.BytesIO(base64_data))
@@ -61,6 +68,9 @@ def predict_jpg_img():
     print(preds_transformers)
     print(thread_transformers.name)
 
+    path = image_TBC_location(image, "image0.jpg")
+    print(path)
+
     accuracy_cnn_raw = float(np.max(preds_cnn, axis=1)[0])
     accuracy_cnn = str(round(accuracy_cnn_raw * 100 , 2))
     accuracy_cnn = accuracy_cnn + ' %'
@@ -78,6 +88,7 @@ def predict_jpg_img():
         'prediccion_cnn': accuracy_cnn,
         'prediccion_transformers': accuracy_transformers,
         'prediccion_promedio': accuracy_average,
+        'new_path': path
     })
 
 

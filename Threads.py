@@ -1,4 +1,4 @@
-from useful_functions import model_cnn, image_cnn, image_transformers, model_predict_cnn
+from useful_functions import model_cnn, image_cnn, image_transformers
 from threading import Thread
 import keras.models
 from PIL import Image, ImageFile
