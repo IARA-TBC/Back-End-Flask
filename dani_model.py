@@ -19,9 +19,9 @@ import cv2
 
 def get_var_value(filename="varstore.dat"):
     with open(filename, "a+") as f:
-        f.seek(20)
-        val = int(f.read() or 20) + 1
-        f.seek(20)
+        f.seek(28)
+        val = int(f.read() or 28) + 1
+        f.seek(28)
         f.truncate()
         f.write(str(val))
         val = str(val)
