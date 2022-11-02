@@ -79,7 +79,7 @@ def predict_jpg_img():
     accuracy_average = (accuracy_cnn_raw + accuracy_transformers_raw)/2
     accuracy_average_rounded = round(accuracy_average * 100 , 2)
     print(accuracy_average_rounded)
-    if(accuracy_average_rounded > 50.00):   
+    if(accuracy_average_rounded > 100.00):   
         path = image_TBC_location(image, "image0.jpg")
         print(path)
         accuracy_average = str(round(accuracy_average * 100 , 2))
