@@ -13,15 +13,16 @@ import cv2
 # results.print()  # or .show(), .save(), .crop(), .pandas(), etc.
 # results.save()  # or .show(), .save(), .crop(), .pandas(), etc.
 
+#im = "D:\Testing-Miniapi\Back-End-Flask\images/0001.jpg"
 
 # results.xyxy[0]  # im predictions (tensor)
 # results.pandas().xyxy[0]  # im predictions (pandas)
 
 def get_var_value(filename="varstore.dat"):
     with open(filename, "a+") as f:
-        f.seek(33)
-        val = int(f.read() or 33) + 1
-        f.seek(33)
+        f.seek(4)
+        val = int(f.read() or 4) + 1
+        f.seek(4)
         f.truncate()
         f.write(str(val))
         val = str(val)
@@ -31,7 +32,7 @@ def get_var_value(filename="varstore.dat"):
 
 
 
-def image_TBC_location(im, name):
+def image_TBC_location(im, name):   
     results = model(im)
     # Results
     results.print()  # or .show(), .save(), .crop(), .pandas(), etc.
@@ -45,6 +46,7 @@ def image_TBC_location(im, name):
     print(final_path)
     return final_path
 
+#image_TBC_location(im, ".")
 
 
 # final_path =  your_counter + '/tb0005_png_jpg.rf.7523f94c20ea8e02fc836b3b7e576648.jpg'
