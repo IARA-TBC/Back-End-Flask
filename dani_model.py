@@ -18,33 +18,33 @@ import cv2
 # results.xyxy[0]  # im predictions (tensor)
 # results.pandas().xyxy[0]  # im predictions (pandas)
 
-def get_var_value(filename="varstore.dat"):
-    with open(filename, "a+") as f:
-        f.seek(4)
-        val = int(f.read() or 4) + 1
-        f.seek(4)
-        f.truncate()
-        f.write(str(val))
-        val = str(val)
-        path = os.getcwd() + '/runs\detect\exp' +  val
-        return path
+# def get_var_value(filename="varstore.dat"):
+#     with open(filename, "a+") as f:
+#         f.seek(4)
+#         val = int(f.read() or 4) + 1
+#         f.seek(4)
+#         f.truncate()
+#         f.write(str(val))
+#         val = str(val)
+#         path = os.getcwd() + '/runs\detect\exp' +  val
+#         return path
 
 
 
 
-def image_TBC_location(im, name):   
+def image_TBC_location(im):   
     results = model(im)
     # Results
-    results.print()  # or .show(), .save(), .crop(), .pandas(), etc.
-    results.save()  # or .show(), .save(), .crop(), .pandas(), etc.
+    # results.print()  # or .show(), .save(), .crop(), .pandas(), etc.
+    # results.save()  # or .show(), .save(), .crop(), .pandas(), etc.
 
-
-    results.xyxy[0]  # im predictions (tensor)
-    results.pandas().xyxy[0]  # im predictions (pandas)
-    your_counter = get_var_value()
-    final_path =  your_counter + '/' + name
-    print(final_path)
-    return final_path
+    results.print()
+    coordenadas = results.xyxy[0]  # im predictions (tensor)
+    #results.pandas().xyxy[0]  # im predictions (pandas)
+    # your_counter = get_var_value()
+    # final_path =  your_counter + '/' + name
+    # print(final_path)
+    return coordenadas
 
 #image_TBC_location(im, ".")
 
