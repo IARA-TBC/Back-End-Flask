@@ -7,8 +7,9 @@ from PIL import Image
 import pydicom as PDCM
 import io
 from ImageConverter.imageConverter import Dicom_to_Image
-from dani_model import image_TBC_location
+from dani_model import image_TBC_location, new_img_with_coordenates
 import os
+import cv2
     
 app = Flask(__name__)
 CORS(app)
@@ -40,7 +41,11 @@ def predict_jpg_img():
 
     #Convierto la información a bytes y la abro con pillow
     image = Image.open(io.BytesIO(base64_data))
+    
+    image.save(image_name)
 
+    path = os.getcwd()
+    path = path + '/' + image_name
     #Llamo la clase que me permite ejecutar la función del modelo de cnn que me permite predecir si la imagen tiene tuberculosis o no
     #Además le paso como paraámetro la imagen
     thread_cnn = CustomThreadCnn(image)
@@ -79,23 +84,26 @@ def predict_jpg_img():
     accuracy_average = (accuracy_cnn_raw + accuracy_transformers_raw)/2
     accuracy_average_rounded = round(accuracy_average * 100 , 2)
     print(accuracy_average_rounded)
-    if(accuracy_average_rounded > 100.00):   
-        coordenadas = image_TBC_location(image)
-        print(coordenadas)
+    if(accuracy_average_rounded > 50.00):   
+        byte_img = image_TBC_location(image)
+        final_path = new_img_with_coordenates(byte_img, path, image_name)
+        print(final_path)
+        print(len(byte_img))
+        os.remove(path)
         accuracy_average = str(round(accuracy_average * 100 , 2))
         accuracy_average = accuracy_average + ' %'
         return jsonify({
         'prediccion_cnn': accuracy_cnn,
         'prediccion_transformers': accuracy_transformers,
         'prediccion_promedio': accuracy_average,
-        'coordenadas': coordenadas
+        'image_path': final_path
     })
 
 
     accuracy_average = str(round(accuracy_average * 100 , 2))
     accuracy_average = accuracy_average + ' %'
 
-
+    os.remove(path)
     return jsonify({
         'prediccion_cnn': accuracy_cnn,
         'prediccion_transformers': accuracy_transformers,
@@ -103,10 +111,23 @@ def predict_jpg_img():
     })
 
 
+@app.route('/delete_path', methods=['POST'])
+def delete_route():
+    image_path = request.json['image_path']
+    os.remove(image_path)
+    return jsonify({
+        'message': 'Imagen eliminada correctamente'
+    })
+
+        
+
 @app.route('/predict_dicom', methods=['POST'])
 def predict_dicom_img():
     print(request.json)
     imagefile = request.json
+    imagefile2 = request.json['path']
+    image_name = os.path.split(imagefile2)[-1]
+    print(image_name)
 
     req = requests.post('http://localhost:4000/images/sendFile', json=imagefile)
     base64_data = req.content
@@ -147,15 +168,28 @@ def predict_dicom_img():
     accuracy_transformers = accuracy_transformers + ' %'
 
     accuracy_average = (accuracy_cnn_raw + accuracy_transformers_raw)/2
-    accuracy_average = str(round(accuracy_average * 100 , 2))
-    accuracy_average = accuracy_average + ' %'
+    accuracy_average_rounded = round(accuracy_average * 100 , 2)
 
+    if(accuracy_average_rounded > 50.00):   
+        byte_img = image_TBC_location(image)
+        final_path = new_img_with_coordenates(byte_img, dicom_image_path, image_name)
+        print(final_path)
+        print(len(byte_img))
+        #os.remove(dicom_image_path)
+        accuracy_average = str(round(accuracy_average * 100 , 2))
+        accuracy_average = accuracy_average + ' %'
+        return jsonify({
+        'prediccion_cnn': accuracy_cnn,
+        'prediccion_transformers': accuracy_transformers,
+        'prediccion_promedio': accuracy_average,
+        'image_path': final_path
+    })
 
     return jsonify({
         'prediccion_cnn': accuracy_cnn,
         'prediccion_transformers': accuracy_transformers,
         'prediccion_promedio': accuracy_average,
-        'new_path': new_path
+        'image_path': new_path
     })
 
 

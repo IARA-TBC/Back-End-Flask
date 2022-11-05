@@ -1,69 +1,52 @@
-import torch
-model = torch.hub.load('ultralytics/yolov5', 'custom', 'best.pt')  # custom trained model
-import os
 import cv2
+import os
+import torch
+model = torch.hub.load('ultralytics/yolov5', 'custom',
+                       'best.pt')  # custom trained model
+import io
+from PIL import Image
+import base64
 
-# # Images
-
-
-# # Inference
-# results = model(im)
-
-# # Results
-# results.print()  # or .show(), .save(), .crop(), .pandas(), etc.
-# results.save()  # or .show(), .save(), .crop(), .pandas(), etc.
-
-#im = "D:\Testing-Miniapi\Back-End-Flask\images/0001.jpg"
-
-# results.xyxy[0]  # im predictions (tensor)
-# results.pandas().xyxy[0]  # im predictions (pandas)
-
-# def get_var_value(filename="varstore.dat"):
-#     with open(filename, "a+") as f:
-#         f.seek(4)
-#         val = int(f.read() or 4) + 1
-#         f.seek(4)
-#         f.truncate()
-#         f.write(str(val))
-#         val = str(val)
-#         path = os.getcwd() + '/runs\detect\exp' +  val
-#         return path
-
-
-
-
-def image_TBC_location(im):   
+def image_TBC_location(im):
     results = model(im)
     # Results
     # results.print()  # or .show(), .save(), .crop(), .pandas(), etc.
     # results.save()  # or .show(), .save(), .crop(), .pandas(), etc.
 
-    results.print()
-    coordenadas = results.xyxy[0]  # im predictions (tensor)
-    #results.pandas().xyxy[0]  # im predictions (pandas)
-    # your_counter = get_var_value()
-    # final_path =  your_counter + '/' + name
-    # print(final_path)
+    #results.save()
+    coordenadas = results.xyxy[0].numpy()  # im predictions (tensor)
+
     return coordenadas
 
-#image_TBC_location(im, ".")
+def new_img_with_coordenates(cor, old_path, name):
+    if(len(cor) == 2):  
+        img = cv2.imread(old_path)
+        print(cor[0][0])
+        cv2.rectangle(img, (int(cor[0][0]), int(cor[0][1])), (int(cor[0][2]), int(cor[0][3])), (255, 0, 0), 3)
+        cv2.rectangle(img, (int(cor[1][0]), int(cor[1][1])), (int(cor[1][2]), int(cor[1][3])), (255, 0, 0), 3)
+        path = os.getcwd() + '/images'
+        path = path + '/' + name
+        cv2.imwrite(path, img)
+        return path
+    elif(len(cor) == 3):  
+        img = cv2.imread(old_path)
+        print(cor[0][0])
+        cv2.rectangle(img, (int(cor[0][0]), int(cor[0][1])), (int(cor[0][2]), int(cor[0][3])), (255, 0, 0), 3)
+        cv2.rectangle(img, (int(cor[1][0]), int(cor[1][1])), (int(cor[1][2]), int(cor[1][3])), (255, 0, 0), 3)
+        cv2.rectangle(img, (int(cor[2][0]), int(cor[2][1])), (int(cor[2][2]), int(cor[2][3])), (255, 0, 0), 3)
+        path = os.getcwd() + '/images'
+        path = path + '/' + name
+        cv2.imwrite(path, img)
+        return path
+    elif(len(cor) == 1):
+        img = cv2.imread(old_path)
+        print(cor)
+        cv2.rectangle(img, (int(cor[0][0]), int(cor[0][1])), (int(cor[0][2]), int(cor[0][3])), (255, 0, 0), 3)
+        path = os.getcwd() + '/images'
+        path = path + '/' + name
+        cv2.imwrite(path, img)
+        return path
+    else:
+        return old_path
 
 
-# final_path =  your_counter + '/tb0005_png_jpg.rf.7523f94c20ea8e02fc836b3b7e576648.jpg'
-# # print("This script has been run {} times.".format(your_counter))
-# print(final_path)
-
-# This script has been run 1 times
-# This script has been run 2 times
-# etc.
-
-# i = 11
-# i+=1
-
-# path = os.getcwd() + '/runs\detect\exp' + str(i) + '/tb0005_png_jpg.rf.7523f94c20ea8e02fc836b3b7e576648.jpg'
-# print(path)
-# New_Img_name = str(Instance_Number - 1).zfill(4) + '.jpg'
-# path = path + '/' + New_Img_name
-# print(path)
-# cv.imwrite(path, New_Img)
-# return path
