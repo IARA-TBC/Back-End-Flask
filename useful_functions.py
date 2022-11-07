@@ -6,7 +6,7 @@ from keras.models import load_model
 from transformers import TFViTForImageClassification
 
 
-MODEL_PATH_CNN = './models/TBC_CNN_Fusion.h5'
+MODEL_PATH_CNN = './models/TBC_CNN_Fusiom_MontKaggleShenzen_ClassicLayers.h5'
 
 model_cnn = load_model(MODEL_PATH_CNN)
 
