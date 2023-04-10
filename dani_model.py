@@ -22,8 +22,8 @@ def new_img_with_coordenates(cor, old_path, name):
     if(len(cor) == 2):  
         img = cv2.imread(old_path)
         print(cor[0][0])
-        cv2.rectangle(img, (int(cor[0][0]), int(cor[0][1])), (int(cor[0][2]), int(cor[0][3])), (255, 0, 0), 3)
-        cv2.rectangle(img, (int(cor[1][0]), int(cor[1][1])), (int(cor[1][2]), int(cor[1][3])), (255, 0, 0), 3)
+        cv2.rectangle(img, (int(cor[0][0]), int(cor[0][1])), (int(cor[0][2]), int(cor[0][3])), (255, 0, 0), 6)
+        cv2.rectangle(img, (int(cor[1][0]), int(cor[1][1])), (int(cor[1][2]), int(cor[1][3])), (255, 0, 0), 6)
         path = os.getcwd() + '/images'
         path = path + '/' + name
         cv2.imwrite(path, img)
@@ -31,9 +31,9 @@ def new_img_with_coordenates(cor, old_path, name):
     elif(len(cor) == 3):  
         img = cv2.imread(old_path)
         print(cor[0][0])
-        cv2.rectangle(img, (int(cor[0][0]), int(cor[0][1])), (int(cor[0][2]), int(cor[0][3])), (255, 0, 0), 3)
-        cv2.rectangle(img, (int(cor[1][0]), int(cor[1][1])), (int(cor[1][2]), int(cor[1][3])), (255, 0, 0), 3)
-        cv2.rectangle(img, (int(cor[2][0]), int(cor[2][1])), (int(cor[2][2]), int(cor[2][3])), (255, 0, 0), 3)
+        cv2.rectangle(img, (int(cor[0][0]), int(cor[0][1])), (int(cor[0][2]), int(cor[0][3])), (255, 0, 0), 6)
+        cv2.rectangle(img, (int(cor[1][0]), int(cor[1][1])), (int(cor[1][2]), int(cor[1][3])), (255, 0, 0), 6)
+        cv2.rectangle(img, (int(cor[2][0]), int(cor[2][1])), (int(cor[2][2]), int(cor[2][3])), (255, 0, 0), 6)
         path = os.getcwd() + '/images'
         path = path + '/' + name
         cv2.imwrite(path, img)
